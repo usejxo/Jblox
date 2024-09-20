@@ -78,12 +78,12 @@
 
     <!-- Search Bar -->
     <div class="search-bar">
-        <input type="text" placeholder="Search for games...">
+        <input type="text" id="search-input" onkeyup="searchGames()" placeholder="Search for games...">
     </div>
 
     <!-- Recently Played Section -->
     <h2 class="section-title">Recently Played</h2>
-    <div class="game-container">
+    <div class="game-container" id="recently-played">
         <a href="https://jblox.netlify.app/g1" class="game-card">
             <img src="https://jblox.netlify.app/images/g1.png" alt="Shooter">
             <div class="game-title">Shooter</div>
@@ -104,7 +104,7 @@
 
     <!-- Recommended Section -->
     <h2 class="section-title">Recommended</h2>
-    <div class="game-container">
+    <div class="game-container" id="recommended-games">
         <a href="https://jblox.netlify.app/g1" class="game-card">
             <img src="https://via.placeholder.com/150" alt="Game 5">
             <div class="game-title">Game 5</div>
@@ -127,6 +127,26 @@
     <div class="footer">
         <p>&copy; 2024 JBlox - All rights reserved.</p>
     </div>
+
+    <script>
+        function searchGames() {
+            // Get the search input value
+            let input = document.getElementById('search-input').value.toLowerCase();
+            
+            // Get all game cards
+            let games = document.getElementsByClassName('game-card');
+            
+            // Loop through all game cards and hide those that don't match the search query
+            for (let i = 0; i < games.length; i++) {
+                let gameTitle = games[i].getElementsByClassName('game-title')[0].innerText.toLowerCase();
+                if (gameTitle.includes(input)) {
+                    games[i].style.display = ""; // Show the game card
+                } else {
+                    games[i].style.display = "none"; // Hide the game card
+                }
+            }
+        }
+    </script>
 
 </body>
 </html>
