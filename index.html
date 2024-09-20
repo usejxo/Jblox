@@ -70,11 +70,31 @@
             width: 100%;
             text-align: center;
         }
+        .user-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .user-section .username {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .user-section .jbux {
+            font-size: 16px;
+            color: #00ff00;
+        }
     </style>
 </head>
 <body>
 
     <h1>JBlox - Your Gaming Hub</h1>
+
+    <!-- User Section -->
+    <div class="user-section">
+        <span class="username" id="username">Username: robotjxo1</span>
+        <span class="jbux" id="jbux-amount">Jbux: 0</span>
+    </div>
 
     <!-- Search Bar -->
     <div class="search-bar">
@@ -107,32 +127,41 @@
     <script>
         // Game data
         const games = [
-            { title: 'Shooter', img: 'https://jblox.netlify.app/images/g1.png', link: 'https://jbg1.netlify.app/' },
-            { title: 'Game 2', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
-            { title: 'Game 3', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
-            { title: 'Game 4', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
-            { title: 'Game 5', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/g1' },
-            { title: 'Game 6', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
-            { title: 'Game 7', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
-            { title: 'Game 8', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' }
+            { title: 'Shooter', img: 'https://jblox.netlify.app/images/g1.png', link: 'https://jblox.netlify.app/g1' },
+            { title: 'Farmer', img: 'https://jblox.netlify.app/images/g2.png', link: 'https://https://usejxo.github.io/jbg2/' },
+            { title: 'Game 3', img: 'https://jblox.netlify.app/images/nd.png', link: 'https://jblox.netlify.app/gna' },
+            { title: 'Game 4', img: 'https://jblox.netlify.app/images/nd.png', link: 'https://jblox.netlify.app/gna' },
+            { title: 'Game 5', img: 'https://jblox.netlify.app/images/nd.png', link: 'https://jblox.netlify.app/g1' },
+            { title: 'Game 6', img: 'https://jblox.netlify.app/images/nd.png', link: 'https://jblox.netlify.app/gna' },
+            { title: 'Game 7', img: 'https://jblox.netlify.app/images/nd.png', link: 'https://jblox.netlify.app/gna' },
+            { title: 'Game 8', img: 'https://jblox.netlify.app/images/nd.png', link: 'https://jblox.netlify.app/gna' }
         ];
 
-        // Get recently played games from localStorage
-        function getRecentlyPlayed() {
-            let recentlyPlayed = JSON.parse(localStorage.getItem('recentlyPlayed')) || [];
-            return recentlyPlayed;
+        // Initial user data
+        const user = {
+            username: 'robotjxo1',
+            jbux: 0
+        };
+
+        // Function to display user details
+        function displayUserInfo() {
+            document.getElementById('username').textContent = `Username: ${user.username}`;
+            document.getElementById('jbux-amount').textContent = `Jbux: ${user.jbux}`;
         }
 
-        // Add game to recently played list and save to localStorage
-        function addToRecentlyPlayed(game) {
-            let recentlyPlayed = getRecentlyPlayed();
-            // Check if the game is already in the list (avoid duplicates)
-            if (!recentlyPlayed.some(g => g.title === game.title)) {
-                recentlyPlayed.unshift(game); // Add to the front of the list
-                if (recentlyPlayed.length > 2) recentlyPlayed.pop(); // Keep only 2 games
-                localStorage.setItem('recentlyPlayed', JSON.stringify(recentlyPlayed));
-            }
+        // Fetch Jbux from the URL and update user's balance
+        function fetchJbux(username, amount) {
+            // Simulate fetching from the URL: `/jbux/add/${username}/${amount}.js`
+            const url = `/jbux/add/${username}/${amount}.js`;
+            console.log(`Fetching Jbux from: ${url}`);
+
+            // Simulate fetch success (Here we just directly add the Jbux to the user for demo)
+            user.jbux += amount;
+            displayUserInfo();
         }
+
+        // Call this function to add Jbux to the user (e.g., 1000 Jbux for user 'robotjxo1')
+        fetchJbux('robotjxo1', 1000);
 
         // Function to display games in a container
         function displayGames(containerId, gameList) {
@@ -141,17 +170,13 @@
 
             gameList.forEach(game => {
                 const gameCard = `
-                    <a href="${game.link}" class="game-card" onclick="addToRecentlyPlayed(${JSON.stringify(game)})">
+                    <a href="${game.link}" class="game-card">
                         <img src="${game.img}" alt="${game.title}">
                         <div class="game-title">${game.title}</div>
                     </a>`;
                 container.innerHTML += gameCard;
             });
         }
-
-        // Load Recently Played Games
-        const recentlyPlayedGames = getRecentlyPlayed();
-        displayGames('recently-played', recentlyPlayedGames);
 
         // Display 4 random recommended games
         const recommendedGames = getRandomGames(games, 4);
@@ -180,6 +205,9 @@
                 }
             }
         }
+
+        // Initial display of user info
+        displayUserInfo();
     </script>
 
 </body>
