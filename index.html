@@ -84,43 +84,13 @@
     <!-- Recently Played Section -->
     <h2 class="section-title">Recently Played</h2>
     <div class="game-container" id="recently-played">
-        <a href="https://jblox.netlify.app/g1" class="game-card">
-            <img src="https://jblox.netlify.app/images/g1.png" alt="Shooter">
-            <div class="game-title">Shooter</div>
-        </a>
-        <a href="https://jblox.netlify.app/gna" class="game-card">
-            <img src="https://via.placeholder.com/150" alt="Game 2">
-            <div class="game-title">Game 2</div>
-        </a>
-        <a href="https://jblox.netlify.app/gna" class="game-card">
-            <img src="https://via.placeholder.com/150" alt="Game 3">
-            <div class="game-title">Game 3</div>
-        </a>
-        <a href="https://jblox.netlify.app/gna" class="game-card">
-            <img src="https://via.placeholder.com/150" alt="Game 4">
-            <div class="game-title">Game 4</div>
-        </a>
+        <!-- Recently played games will be inserted here by JavaScript -->
     </div>
 
     <!-- Recommended Section -->
     <h2 class="section-title">Recommended</h2>
     <div class="game-container" id="recommended-games">
-        <a href="https://jblox.netlify.app/g1" class="game-card">
-            <img src="https://via.placeholder.com/150" alt="Game 5">
-            <div class="game-title">Game 5</div>
-        </a>
-        <a href="https://jblox.netlify.app/gna" class="game-card">
-            <img src="https://via.placeholder.com/150" alt="Game 6">
-            <div class="game-title">Game 6</div>
-        </a>
-        <a href="https://jblox.netlify.app/gna" class="game-card">
-            <img src="https://via.placeholder.com/150" alt="Game 7">
-            <div class="game-title">Game 7</div>
-        </a>
-        <a href="https://jblox.netlify.app/gna" class="game-card">
-            <img src="https://via.placeholder.com/150" alt="Game 8">
-            <div class="game-title">Game 8</div>
-        </a>
+        <!-- Recommended games will be inserted here by JavaScript -->
     </div>
 
     <!-- Footer -->
@@ -129,20 +99,75 @@
     </div>
 
     <script>
+        // Game data
+        const games = [
+            { title: 'Shooter', img: 'https://jblox.netlify.app/images/g1.png', link: 'https://jblox.netlify.app/g1' },
+            { title: 'Game 2', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
+            { title: 'Game 3', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
+            { title: 'Game 4', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
+            { title: 'Game 5', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/g1' },
+            { title: 'Game 6', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
+            { title: 'Game 7', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' },
+            { title: 'Game 8', img: 'https://via.placeholder.com/150', link: 'https://jblox.netlify.app/gna' }
+        ];
+
+        // Get recently played games from localStorage
+        function getRecentlyPlayed() {
+            let recentlyPlayed = JSON.parse(localStorage.getItem('recentlyPlayed')) || [];
+            return recentlyPlayed;
+        }
+
+        // Add game to recently played list and save to localStorage
+        function addToRecentlyPlayed(game) {
+            let recentlyPlayed = getRecentlyPlayed();
+            // Check if the game is already in the list (avoid duplicates)
+            if (!recentlyPlayed.some(g => g.title === game.title)) {
+                recentlyPlayed.unshift(game); // Add to the front of the list
+                if (recentlyPlayed.length > 2) recentlyPlayed.pop(); // Keep only 2 games
+                localStorage.setItem('recentlyPlayed', JSON.stringify(recentlyPlayed));
+            }
+        }
+
+        // Function to display games in a container
+        function displayGames(containerId, gameList) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';  // Clear any existing content
+
+            gameList.forEach(game => {
+                const gameCard = `
+                    <a href="${game.link}" class="game-card" onclick="addToRecentlyPlayed(${JSON.stringify(game)})">
+                        <img src="${game.img}" alt="${game.title}">
+                        <div class="game-title">${game.title}</div>
+                    </a>`;
+                container.innerHTML += gameCard;
+            });
+        }
+
+        // Load Recently Played Games
+        const recentlyPlayedGames = getRecentlyPlayed();
+        displayGames('recently-played', recentlyPlayedGames);
+
+        // Display 4 random recommended games
+        const recommendedGames = getRandomGames(games, 4);
+        displayGames('recommended-games', recommendedGames);
+
+        // Utility function to shuffle and pick random games
+        function getRandomGames(array, num) {
+            const shuffled = array.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, num);
+        }
+
+        // Search Functionality
         function searchGames() {
-            // Get the search input value
             let input = document.getElementById('search-input').value.toLowerCase();
-            
-            // Get all game cards
             let games = document.getElementsByClassName('game-card');
-            
-            // Loop through all game cards and hide those that don't match the search query
+
             for (let i = 0; i < games.length; i++) {
                 let gameTitle = games[i].getElementsByClassName('game-title')[0].innerText.toLowerCase();
                 if (gameTitle.includes(input)) {
-                    games[i].style.display = ""; // Show the game card
+                    games[i].style.display = "";
                 } else {
-                    games[i].style.display = "none"; // Hide the game card
+                    games[i].style.display = "none";
                 }
             }
         }
