@@ -93,6 +93,12 @@
         <!-- Recommended games will be inserted here by JavaScript -->
     </div>
 
+    <!-- All Games Section -->
+    <h2 class="section-title">All Games</h2>
+    <div class="game-container" id="all-games">
+        <!-- All games will be inserted here by JavaScript -->
+    </div>
+
     <!-- Footer -->
     <div class="footer">
         <p>&copy; 2024 JBlox - All rights reserved.</p>
@@ -150,6 +156,9 @@
         // Display 4 random recommended games
         const recommendedGames = getRandomGames(games, 4);
         displayGames('recommended-games', recommendedGames);
+
+        // Display All Games
+        displayGames('all-games', games);
 
         // Utility function to shuffle and pick random games
         function getRandomGames(array, num) {
