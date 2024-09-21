@@ -90,12 +90,6 @@
 
     <h1>JBlox - Your Gaming Hub</h1>
 
-    <!-- User Section -->
-    <div class="user-section">
-        <span class="username" id="username">Username: robotjxo1</span>
-        <span class="jbux" id="jbux-amount">Jbux: 0</span>
-    </div>
-
     <!-- Search Bar -->
     <div class="search-bar">
         <input type="text" id="search-input" onkeyup="searchGames()" placeholder="Search for games...">
@@ -137,31 +131,19 @@
             { title: 'Game 8', img: 'https://jblox.netlify.app/images/nd.png', link: 'https://jblox.netlify.app/gna' }
         ];
 
-        // Initial user data
-        const user = {
-            username: 'robotjxo1',
-            jbux: 0
-        };
 
-        // Function to display user details
-        function displayUserInfo() {
-            document.getElementById('username').textContent = `Username: ${user.username}`;
-            document.getElementById('jbux-amount').textContent = `Jbux: ${user.jbux}`;
+        // Utility function to save recently played games in localStorage
+        function saveRecentlyPlayed(game) {
+            let recentlyPlayed = JSON.parse(localStorage.getItem('recentlyPlayed')) || [];
+            // Remove the game if it's already in the list to avoid duplicates
+            recentlyPlayed = recentlyPlayed.filter(g => g.title !== game.title);
+            // Add the new game to the front of the array
+            recentlyPlayed.unshift(game);
+            // Keep only the latest 5 games
+            recentlyPlayed = recentlyPlayed.slice(0, 5);
+            // Save back to localStorage
+            localStorage.setItem('recentlyPlayed', JSON.stringify(recentlyPlayed));
         }
-
-        // Fetch Jbux from the URL and update user's balance
-        function fetchJbux(username, amount) {
-            // Simulate fetching from the URL: `/jbux/add/${username}/${amount}.js`
-            const url = `/jbux/add/${username}/${amount}.js`;
-            console.log(`Fetching Jbux from: ${url}`);
-
-            // Simulate fetch success (Here we just directly add the Jbux to the user for demo)
-            user.jbux += amount;
-            displayUserInfo();
-        }
-
-        // Call this function to add Jbux to the user (e.g., 1000 Jbux for user 'robotjxo1')
-        fetchJbux('robotjxo1', 1000);
 
         // Function to display games in a container
         function displayGames(containerId, gameList) {
@@ -170,12 +152,18 @@
 
             gameList.forEach(game => {
                 const gameCard = `
-                    <a href="${game.link}" class="game-card">
+                    <a href="${game.link}" class="game-card" onclick="saveRecentlyPlayed(${JSON.stringify(game)})">
                         <img src="${game.img}" alt="${game.title}">
                         <div class="game-title">${game.title}</div>
                     </a>`;
                 container.innerHTML += gameCard;
             });
+        }
+
+        // Display recently played games from localStorage
+        function displayRecentlyPlayed() {
+            const recentlyPlayed = JSON.parse(localStorage.getItem('recentlyPlayed')) || [];
+            displayGames('recently-played', recentlyPlayed);
         }
 
         // Display 4 random recommended games
@@ -206,8 +194,11 @@
             }
         }
 
-        // Initial display of user info
+        // Initial display of user info (this function should exist based on your logic)
         displayUserInfo();
+
+        // Display recently played games on page load
+        displayRecentlyPlayed();
     </script>
 
 </body>
