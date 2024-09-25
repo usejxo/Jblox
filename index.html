@@ -11,6 +11,7 @@
             color: #fff;
             margin: 0;
             padding: 20px;
+            display: none; /* Hide content until password is entered */
         }
         h1, h2 {
             color: #fff;
@@ -119,6 +120,15 @@
     </div>
 
     <script>
+        // Simple password protection
+        var password = prompt("Please enter the beta access password:");
+        if (password !== "jxobloxbeta1!") {
+            alert("Incorrect password. Access denied.");
+            window.location.href = "about:blank"; // Redirect to blank page if incorrect
+        } else {
+            document.body.style.display = "block"; // Show content if correct
+        }
+
         // Game data
         const games = [
             { title: 'Shooter', img: 'https://jblox.netlify.app/images/g1.png', link: 'https://jbg1.netlify.app/' },
@@ -130,7 +140,6 @@
             { title: 'Portal', img: 'https://jblox.netlify.app/images/g7.png', link: 'https://jbg7.netlify.app/' },
             { title: 'Game 8', img: 'https://jblox.netlify.app/images/nd.png', link: 'https://jblox.netlify.app/gna' }
         ];
-
 
         // Utility function to save recently played games in localStorage
         function saveRecentlyPlayed(game) {
